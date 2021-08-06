@@ -3,11 +3,11 @@ from django.db.models.deletion import CASCADE
 
 
 class List(models.Model):
-    """отдельный список"""
+    """Отдельный список."""
     pass
 
 
 class Item(models.Model):
-    """элемент списка"""
+    """Элемент списка."""
     text = models.TextField(default='')
     list = models.ForeignKey(List, on_delete=CASCADE, default=None)

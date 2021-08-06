@@ -3,19 +3,19 @@ from lists.models import Item, List
 
 
 class HomePageTest(TestCase):
-    """тест домашней страницы"""
+    """Тест домашней страницы."""
 
     def test_uses_home_template(self):
-        """тест: домашняя страница возвращает правильный html"""
+        """Тест: домашняя страница возвращает правильный html."""
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
 
 class ListAndItemModelsTest(TestCase):
-    """тест модели элемента списка"""
+    """Тест модели элемента списка."""
 
     def test_saving_and_retrieving_items(self):
-        """тест сохранения и получения элементов списка"""
+        """Тест сохранения и получения элементов списка."""
         list_ = List()
         list_.save()
 
@@ -44,16 +44,16 @@ class ListAndItemModelsTest(TestCase):
 
 
 class ListViewTest(TestCase):
-    """тест представления списка"""
+    """Тест представления списка."""
 
     def test_uses_list_template(self):
-        """тест: используется шаблон списка"""
+        """Тест: используется шаблон списка."""
         list_ = List.objects.create()
         response = self.client.get(f'/lists/{list_.id}/')
         self.assertTemplateUsed(response, 'list.html')
 
     def test_displays_only_items_for_that_list(self):
-        """тест: отображаются элементы только для этого списка"""
+        """Тест: отображаются элементы только для этого списка."""
         correct_list = List.objects.create()
         Item.objects.create(text='itemey 1', list=correct_list)
         Item.objects.create(text='itemey 2', list=correct_list)
@@ -69,7 +69,7 @@ class ListViewTest(TestCase):
         self.assertNotContains(response, 'другой элемент 2 списка')
 
     def test_passes_correct_list_to_template(self):
-        """тест: передается правильный шаблон списка"""
+        """Тест: передается правильный шаблон списка."""
         other_list = List.objects.create()
         correct_list = List.objects.create()
         response = self.client.get(f'/lists/{correct_list.id}/')
@@ -77,10 +77,10 @@ class ListViewTest(TestCase):
 
 
 class NewListTest(TestCase):
-    """тест нового списка"""
+    """Тест нового списка."""
 
     def test_can_save_a_POST_request(self):
-        """тест: можно сохранить post-запрос"""
+        """Тест: можно сохранить post-запрос."""
         self.client.post('/lists/new', data={'item_text': 'A new list item'})
 
         self.assertEqual(Item.objects.count(), 1)
@@ -88,7 +88,7 @@ class NewListTest(TestCase):
         self.assertEqual(new_item.text, 'A new list item')
 
     def test_redirect_after_POST(self):
-        """тест: переадресуется после post-запроса"""
+        """Тест: переадресуется после post-запроса."""
         response = self.client.post('/lists/new',
                                     data={'item_text': 'A new list item'})
         new_list = List.objects.first()
@@ -96,10 +96,10 @@ class NewListTest(TestCase):
 
 
 class NewItemTest(TestCase):
-    """тест нового элемента списка"""
+    """Тест нового элемента списка."""
 
     def test_can_save_a_POST_request_to_an_existing_list(self):
-        """тест: можно сохранить post-запрос в существующий список"""
+        """Тест: можно сохранить post-запрос в существующий список."""
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
@@ -114,7 +114,7 @@ class NewItemTest(TestCase):
         self.assertEqual(new_item.list, correct_list)
 
     def test_redirects_to_list_view(self):
-        """тест: переадресуется в представлений списка"""
+        """Тест: переадресуется в представлений списка."""
         other_list = List.objects.create()
         correct_list = List.objects.create()
 

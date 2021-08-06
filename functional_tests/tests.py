@@ -9,18 +9,18 @@ MAX_WAIT = 10
 
 
 class NewVisitorTest(LiveServerTestCase):
-    """тест нового посетителя"""
+    """Тест нового посетителя."""
 
     def setUp(self):
-        """установка"""
+        """Установка."""
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
-        """демонтаж"""
+        """Демонтаж."""
         self.browser.quit()
 
     def wait_for_row_in_list_table(self, row_text):
-        """ожидать строку в таблице списка"""
+        """Ожидать строку в таблице списка."""
         start_time = time.time()
         while True:
             try:
@@ -34,7 +34,7 @@ class NewVisitorTest(LiveServerTestCase):
                 time.sleep(0.5)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        """тест: можно начать список и получить его позже"""
+        """Тест: можно начать список и получить его позже."""
         # Эдит слышала про крутое новое онлайн-приложение со
         # списком неотложных дел. Она решает оценить его
         # домашнюю страницу
@@ -76,7 +76,9 @@ class NewVisitorTest(LiveServerTestCase):
         # Удовлетворенная, она снова ложится спать.
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
-        """тест: многочисленные пользователи могут начать списки по разным url"""
+        """Тест: многочисленные пользователи могут начать
+           списки по разным url.
+        """
         # Эдит начинает новый список
         self.browser.get(self.live_server_url)
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -90,8 +92,8 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Теперь новый пользователь, Фрэнсис, приходит на сайт.
 
-        ## Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
-        ## информация от Эдит не прошла через данные cookie и пр.
+        # Мы используем новый сеанс браузера, тем самым обеспечивая,
+        # чтобы никака информация от Эдит не прошла через данные cookie и пр.
         self.browser.quit()
         self.browser = webdriver.Firefox()
 
@@ -119,3 +121,29 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Купить молоко', page_text)
 
         # Удовлетворенные, они оба ложатся спать
+
+    def test_layout_and_styling(self):
+        """Тест макета и стилевого оформления."""
+        # Эдит открывает домашнюю страницу
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # Она замечает, что поле ввода аккуратно центрировано
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
+
+        # Она начинает новый список и видит, что поле ввода там тоже
+        # аккуратно центировано
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: testing')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+        inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        ) 
